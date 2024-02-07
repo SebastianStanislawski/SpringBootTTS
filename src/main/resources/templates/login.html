@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {font-family: Arial, Helvetica, sans-serif;}
+
+    input[type=text], input[type=password] {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #04AA6D;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+
+
+    .container {
+      padding: 20px;
+    }
+
+    span.psw {
+      float: right;
+      padding-top: 10px;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto 15% auto;
+      border: 1px solid #888;
+      width: 80%;
+    }
+
+    .animate {
+      -webkit-animation: animatezoom 0.6s;
+      animation: animatezoom 0.6s
+    }
+
+    @keyframes animatezoom {
+      from {transform: scale(0)}
+      to {transform: scale(1)}
+    }
+  </style>
+</head>
+<body>
+<div th:if="${param.error}">
+  Invalid username and password.</div>
+<div th:if="${param.logout}">
+  You have been logged out.</div>
+
+<form th:action="@{/login}" method="post" class="modal-content animate">
+  <div class="container">
+    <label id="uname"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="username" required>
+
+    <label id="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="password" required>
+
+    <button type="submit">Login</button>
+  </div>
+  <span class="psw">Do you want to <a href="register">create</a> an account?</span>
+</form>
+</body>
+</html>

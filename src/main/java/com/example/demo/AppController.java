@@ -17,9 +17,13 @@ class AppController {
     private UserRepository userRepository;
     @GetMapping("")
     public String homePage(){
-        return "index";
+        return "login";
     }
 
+    @GetMapping("/login")
+    String login() {
+        return "login";
+    }
     @GetMapping("/register")
     public String registerPage(Model model){
         model.addAttribute("user", new User());
@@ -33,7 +37,7 @@ class AppController {
         user.setPassword(encodedPasswd);
         userRepository.save(user);
 
-        return "index";
+        return "login";
     }
 
     @GetMapping("/users")
@@ -42,16 +46,6 @@ class AppController {
         model.addAttribute("listUsers", listUsers);
 
         return "users";
-    }
-
-}
-
-
-@RestController
-class AppRestController {
-    @GetMapping("/hello")
-    public String hello(){
-        return "Hello World!";
     }
 
 }

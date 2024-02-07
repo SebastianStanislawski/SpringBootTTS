@@ -11,9 +11,6 @@
 <div class="container text-center">
     <div>
         <form th:action="@{/logout}" method="post">
-            <p>
-                Welcome <b><span sec:authentication="principal.fullName"></span></b>
-            </p>
             <input type="submit" value="Sign Out" />
         </form>
     </div>
