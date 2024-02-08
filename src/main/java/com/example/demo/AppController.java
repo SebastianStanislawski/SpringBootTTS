@@ -1,14 +1,16 @@
 package com.example.demo;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,4 +64,26 @@ class AppController {
         return "tts";
     }
 
+    @PostMapping("/tts")
+    public String test(Model model, HttpServletRequest request){
+        String onnx = request.getParameter("selectedOnnx");
+        String text = request.getParameter("typedInText");
+
+        try {
+            //TODO change full path to files inside the project
+            String modelPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\onnx\\" + onnx + ".onnx";
+            String outputPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\output";
+            String piperPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\piper\\piper.exe";
+            String command = "echo '" + text + "' | " + piperPath + " -m " + modelPath + " -f " + outputPath + "\\output.wav";
+            Runtime.getRuntime().exec("cmd.exe /K F: && " + command);
+            System.out.println("Cudownie!");
+            System.out.println(command);
+        } catch (IOException e) {
+            System.out.println(e);
+            throw new RuntimeException(e);
+        }
+        listUsers(model);
+        System.out.println(onnx + "\n" + text + "\n\n");
+        return "/tts";
+    }
 }

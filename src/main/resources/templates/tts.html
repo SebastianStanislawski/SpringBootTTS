@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
     <style>
         body {
@@ -28,7 +28,7 @@
           min-height: 100px;
           resize: none;
           border-radius: 8px;
-          border: 1.5px solid #525563;
+          border:2px solid #8a92b8;
           padding: 0.5rem;
           color: #525563;
           &:focus {
@@ -77,22 +77,23 @@
     </style>
 </head>
 <body>
-
-<div class="wrapper">
-    <h1>Enter the text you want to convert to spoken audio. </h1>
-    <textarea name="textarea" id="textarea" maxlength="300" placeholder="Type here..."autofocus></textarea>
-    <div id="the-count">
-        <span id="current">0</span>
-        <span id="maximum">/ 300</span>
-    </div>
-</div>
-
-<div class="wrapper voicePicker">
-    <select class="voices" >
-        <option th:each="voice : ${onnx}" th:value="${voice}" th:text="${voice}"></option>
-    </select>
-
-    <button class="button">Generate!</button>
+<div>
+    <form th:action="@{/tts}" method="post">
+        <div class="wrapper">
+            <h1>Enter the text you want to convert to spoken audio. </h1>
+            <textarea name="typedInText" id="textarea" maxlength="300" placeholder="Type here..."autofocus></textarea>
+            <div id="the-count">
+                <span id="current">0</span>
+                <span id="maximum">/ 300</span>
+            </div>
+        </div>
+        <div class="wrapper voicePicker">
+                <select class="voices" name="selectedOnnx">
+                    <option th:each="voice : ${onnx}" th:value="${voice}" th:text="${voice}"></option>
+                </select>
+                <button class="button" type="submit">Generate!</button>
+        </div>
+    </form>
 </div>
 
 <div class="audio">
