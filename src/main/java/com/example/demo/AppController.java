@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,9 +26,11 @@ class AppController {
     String login() {
         return "login";
     }
+
     @GetMapping("/register")
     public String registerPage(Model model){
         model.addAttribute("user", new User());
+
         return "register";
     }
 
@@ -40,12 +44,22 @@ class AppController {
         return "login";
     }
 
-    @GetMapping("/users")
+    @GetMapping("/tts")
     public String listUsers(Model model) {
-        List<User> listUsers = userRepository.findAll();
-        model.addAttribute("listUsers", listUsers);
+        //List<User> listUsers = userRepository.findAll();
+        //model.addAttribute("listUsers", listUsers);
 
-        return "users";
+        List<String> voicesAvailable = new ArrayList<String>();
+        File[] files = new File("src/main/resources/static/onnx").listFiles();
+        assert files != null;
+        for(File file : files){
+            if (file.isFile()){
+                voicesAvailable.add(file.getName().substring(0, file.getName().lastIndexOf(".")));
+            }
+        }
+        model.addAttribute("onnx", voicesAvailable);
+        //System.out.println(voicesAvailable);
+        return "tts";
     }
 
 }
