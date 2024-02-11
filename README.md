@@ -20,6 +20,8 @@ spring.datasource.url=jdbc:mysql://localhost:3306/springbootdemo
 spring.datasource.username=username
 spring.datasource.password=password
 ```
+## Piper
+Local neural text to speech system needed to be put in '/static/piper' directory. Based on this executable, app will convert text to audio file.
 
 ## TO DO
 Application stores generated .wav file inside `/static/output` directory. It would be reasonable to add special table to the database and storage all the previous files along with additional informations (e.g. who created them). 
