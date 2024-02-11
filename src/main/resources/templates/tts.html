@@ -76,7 +76,7 @@
 
     </style>
 </head>
-<body>
+<body onload="reloadAudio();">
 <div>
     <form th:action="@{/tts}" method="post">
         <div class="wrapper">
@@ -97,7 +97,7 @@
 </div>
 
 <div class="audio">
-    <audio controls src="../static/output/output.wav">
+    <audio id="audio" controls src="/static/output/output.wav">
     </audio>
 </div>
 
@@ -105,6 +105,10 @@
     document.getElementById('textarea').onkeyup = function () {
       document.getElementById('current').innerHTML = (this.value.length);
     };
+    function reloadAudio(){
+      document.getElementById('audio').load();
+    }
+
 
 </script>
 </body>

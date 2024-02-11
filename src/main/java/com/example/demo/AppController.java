@@ -9,10 +9,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sun.nio.file.ExtendedWatchEventModifier.FILE_TREE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 @Controller
 class AppController {
@@ -51,6 +59,7 @@ class AppController {
         //List<User> listUsers = userRepository.findAll();
         //model.addAttribute("listUsers", listUsers);
 
+
         List<String> voicesAvailable = new ArrayList<String>();
         File[] files = new File("src/main/resources/static/onnx").listFiles();
         assert files != null;
@@ -65,25 +74,52 @@ class AppController {
     }
 
     @PostMapping("/tts")
-    public String test(Model model, HttpServletRequest request){
+    public String test(Model model, HttpServletRequest request) throws InterruptedException {
+//        File previousOutput = new File("D:/SpringBoot/demo/src/main/resources/static/output/output.wav");
+//        previousOutput.delete();
+
+
+
         String onnx = request.getParameter("selectedOnnx");
         String text = request.getParameter("typedInText");
+       try {
 
-        try {
-            //TODO change full path to files inside the project
-            String modelPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\onnx\\" + onnx + ".onnx";
-            String outputPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\output";
-            String piperPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\piper\\piper.exe";
-            String command = "echo '" + text + "' | " + piperPath + " -m " + modelPath + " -f " + outputPath + "\\output.wav";
-            Runtime.getRuntime().exec("cmd.exe /K F: && " + command);
-            System.out.println("Cudownie!");
-            System.out.println(command);
+           //TODO change full path to files inside the project
+           String modelPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\onnx\\" + onnx + ".onnx";
+           String outputPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\output";
+           String piperPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\piper\\piper.exe";
+           String command = "echo '" + text + "' | " + piperPath + " -m " + modelPath + " -f " + outputPath + "\\output.wav";
+
+           ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/k", command);
+           Process process = processBuilder.start();
+
+
+//           FileSystem fileSystem = FileSystems.getDefault();
+//           WatchService watchService = fileSystem.newWatchService();
+//           Path audioPath = Paths.get("D:/SpringBoot/demo/src/main/resources/static/output");
+//           audioPath.register(watchService, new WatchEvent.Kind[] {ENTRY_MODIFY, ENTRY_CREATE, ENTRY_DELETE}, FILE_TREE);
+//
+//           while (true) {
+//               WatchKey key = watchService.take();
+//               for(WatchEvent<?> e : key.pollEvents()){
+//                   Object c = e.context();
+//                   System.out.printf("%s %d %s\n", e.kind(), e.count(), c);
+//                   if(key.pollEvents() == ENTRY_CREATE){
+//                       break;
+//                   }
+//               }
+//               key.reset();
+//               break;
+//           }
+
+
+
+
         } catch (IOException e) {
             System.out.println(e);
             throw new RuntimeException(e);
         }
         listUsers(model);
-        System.out.println(onnx + "\n" + text + "\n\n");
-        return "/tts";
+        return "tts";
     }
 }
