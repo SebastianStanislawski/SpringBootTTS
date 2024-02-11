@@ -2,25 +2,14 @@ package com.example.demo;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.sun.nio.file.ExtendedWatchEventModifier.FILE_TREE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 @Controller
 class AppController {
@@ -40,7 +29,6 @@ class AppController {
     @GetMapping("/register")
     public String registerPage(Model model){
         model.addAttribute("user", new User());
-
         return "register";
     }
 
@@ -50,16 +38,11 @@ class AppController {
         String encodedPasswd = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPasswd);
         userRepository.save(user);
-
         return "login";
     }
 
     @GetMapping("/tts")
     public String listUsers(Model model) {
-        //List<User> listUsers = userRepository.findAll();
-        //model.addAttribute("listUsers", listUsers);
-
-
         List<String> voicesAvailable = new ArrayList<String>();
         File[] files = new File("src/main/resources/static/onnx").listFiles();
         assert files != null;
@@ -75,19 +58,18 @@ class AppController {
 
     @PostMapping("/tts")
     public String test(Model model, HttpServletRequest request) throws InterruptedException {
-//        File previousOutput = new File("D:/SpringBoot/demo/src/main/resources/static/output/output.wav");
-//        previousOutput.delete();
-
-
 
         String onnx = request.getParameter("selectedOnnx");
         String text = request.getParameter("typedInText");
        try {
 
+           File modelFile = new File("src/main/resources/static/onnx/myTrainedVoice.onnx");
+           File output = new File("src/main/resources/static/output");
+           File piperFile = new File("src/main/resources/static/piper/piper.exe");
            //TODO change full path to files inside the project
-           String modelPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\onnx\\" + onnx + ".onnx";
-           String outputPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\output";
-           String piperPath = "D:\\SpringBoot\\demo\\src\\main\\resources\\static\\piper\\piper.exe";
+           String piperPath = piperFile.getPath();
+           String modelPath = modelFile.getPath();
+           String outputPath = output.getPath();
            String command = "echo '" + text + "' | " + piperPath + " -m " + modelPath + " -f " + outputPath + "\\output.wav";
 
            ProcessBuilder processBuilder = new ProcessBuilder("cmd.exe", "/k", command);
